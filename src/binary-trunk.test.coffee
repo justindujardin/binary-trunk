@@ -1,3 +1,5 @@
+# This is the test-suite for [binary-trunk](./index.html).
+
 # ## Binary Tree Node
 module 'BinaryTreeNode'
 
@@ -255,8 +257,8 @@ test 'Reingold-Tilford', ->
 # **should satisfy 'y-coordinate sharing' aesthetic**
 
 # check that aesthetic 1 is satisfied by: building a tree, gathering up all 
-# the nodes in the tree, grouping them by their depth in the tree, then 
-# asserting that each node in a depth group has the same y-coordinate.
+# the nodes, grouping them by their depth, and then asserting that each node
+# in a depth group has the same y-coordinate.
 test 'Aesthetic 1 - all nodes at a given depth share the same y coordinate', ->
   tree = new DJC.BinarySearchTree 0
   tree.insert val for val in [-5..5]
@@ -320,7 +322,7 @@ test 'Aesthetic 3 - children should positioned equidistant from parent', ->
 
 # check that aesthetic 4 reflection is satisfied by: building a tree, visiting
 # the nodes in the right side of the tree, and asserting that each mirrored node
-# on the left side is the same distance from the root node as it is.
+# on the left side is the same distance from the root as it.
 test 'Aesthetic 4.1 - mirrored subtrees should be reflections of each other visually', ->
   tree = new DJC.BinarySearchTree 0
   tree.insert val for val in [-2,-1,-4,-3,-5]
@@ -339,8 +341,8 @@ test 'Aesthetic 4.1 - mirrored subtrees should be reflections of each other visu
 # **should satisfy 'subtree identical regardless of position' aesthetic**
 
 # check that aesthetic 4 position independence is satisfied by: building a tree, 
-# picking known nodes that are identical but opposite, and ensuring that their 
-# children are positioned the same, regardless of their position in the tree.
+# picking known nodes that are identical but in different positions of the tree,
+# and ensuring that their children are positioned the same.
 test 'Aesthetic 4.2 - identical subtrees should be rendered the identically, regardless of position', ->
   tree = new DJC.BinarySearchTree 0
   tree.insert val for val in [7,4,3,5,13,12,14,-3,-6,-2,-7,-13,-14,-12]
