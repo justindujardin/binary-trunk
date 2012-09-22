@@ -1,18 +1,26 @@
-# **binaryTrunk** is a bootstrap set of classes for building up, and working
+# **binary-trunk** is a bootstrap set of classes for building up, and working
 # with, binary trees in CoffeeScript.  It provides a fleshed-out binary tree 
 # node, various tree implementations, and a 
 # [Reingold-Tilford](http://emr.cs.iit.edu/~reingold/tidier-drawings.pdf) 
 # layout algorithm for visualizing the trees. 
 #  
 # There is also a [full test-suite](tests.html), with accompanying 
-# [annotated source code](./binaryTrunk.test.html)
+# [annotated source code](./binary-trunk.test.html)
 #  
 # 
 root = this
 DJC = root.DJC = root.DJC or {}
 
-# A simple binary tree node.
+# ## BinaryTreeNode
+
+# The binary tree node is the base node for all of our trees, and provides a
+# rich set of methods for constructing, inspecting, and modifying them.
+#  
+# The node itself defines the structure of the binary tree, having left and right
+# children, and a parent.
 class DJC.BinaryTreeNode
+
+  # Allow specifying children in the constructor
   constructor:(left,right) ->
     @setLeft left if left
     @setRight right if right
@@ -31,6 +39,8 @@ class DJC.BinaryTreeNode
   # Serialize the node as a string
   toString:() -> "#{@left} #{@right}"
 
+  # Rotate a node, changing the structure of the tree, without modifying
+  # the order of the nodes in the tree.
   rotate:() -> 
     node = @
     parent = @parent
@@ -98,26 +108,32 @@ class DJC.BinaryTreeNode
   getSide:(child) ->
     return 'left' if child == @left
     return 'right' if child == @right
-    throw "BinaryTreeNode.getSide: not a child of this node"
+    throw new Error "BinaryTreeNode.getSide: not a child of this node"
 
   # Set a new `child` on the given `side`
   setSide:(child,side) =>
     switch side
       when 'left' then @setLeft(child)
       when 'right' then @setRight(child)
-      else throw "BinaryTreeNode.setSide: Invalid side"
+      else throw new Error "BinaryTreeNode.setSide: Invalid side"
 
+  # Get children as an array.  If there are two children, the first object will 
+  # always represent the left child, and the second will represent the right.
   getChildren:() ->
     result = []
     result.push @left if @left
     result.push @right if @right
     result
 
+  # Get the sibling node of this node.  If there is no parent, or the node has no
+  # sibling, the return value will be undefined.
   getSibling:() ->
     return if not @parent
     return @parent.right if @parent.left is @
     return @parent.left if @parent.right is @
 
+
+# ## BinarySearchTree
 
 # A very simple binary search tree that relies on keys that support 
 # operator value comparison.
@@ -128,6 +144,7 @@ class DJC.BinarySearchTree extends DJC.BinaryTreeNode
     result.key = @key
     result
 
+  # Insert a node in the tree with the specified key.
   insert:(key) ->
     node = @getRoot()
     while node
@@ -144,6 +161,8 @@ class DJC.BinarySearchTree extends DJC.BinaryTreeNode
       else
         break
     @
+  # Find a node in the tree by its key and return it.  Return null if the key
+  # is not found in the tree.
   find:(key) ->
     node = @getRoot()
     while node 
@@ -159,8 +178,14 @@ class DJC.BinarySearchTree extends DJC.BinaryTreeNode
       return null
     null
 
+
+# ## BinaryTreeTidier
+
 # Implement a Reingold-Tilford 'tidier' tree layout algorithm.
 class DJC.BinaryTreeTidier
+
+  # Assign x/y values to all nodes in the tree, and return an object containing
+  # the measurements of the tree.
   layout: (node,unitMultiplier=1) ->
     @measure node
     @transform node, 0, unitMultiplier

@@ -5,27 +5,27 @@ fs            = require 'fs'
 path          = require 'path'
 {parser, uglify} = require 'uglify-js'
 
-# Extract the docco version from `package.json`
+# Extract the version from `package.json`
 version = JSON.parse(fs.readFileSync("#{__dirname}/package.json")).version
 
-option '-w', '--watch', 'continually build the binaryTrunk library and outputs'
+option '-w', '--watch', 'continually build the library and outputs'
 
 outputs =
-  'src/binaryTrunk.coffee': 'web/js/binaryTrunk.js'
-  'src/binaryTrunk.test.coffee': 'web/js/binaryTrunk.test.js'
+  'src/binary-trunk.coffee': 'web/js/binary-trunk.js'
+  'src/binary-trunk.test.coffee': 'web/js/binary-trunk.test.js'
 
-task 'build', 'build the binaryTrunk library', (options) ->
+task 'build', 'build the library', (options) ->
   for file,output of outputs
     build file, output
     watch file,['build','doc','test'] if options.watch
 
-task 'doc', 'rebuild the binaryTrunk documentation', ->
+task 'doc', 'rebuild the documentation', ->
   options = output: './'
-  Docco.document [ 'src/binaryTrunk.coffee' ], options, ->
-    fs.rename './binaryTrunk.html', './index.html', ->
-      Docco.document [ 'src/binaryTrunk.test.coffee' ], options
+  Docco.document [ 'src/binary-trunk.coffee' ], options, ->
+    fs.rename './binary-trunk.html', './index.html', ->
+      Docco.document [ 'src/binary-trunk.test.coffee' ], options
 
-task 'test', 'test the binaryTrunk library using phantomjs', ->
+task 'test', 'test the library using phantomjs', ->
   child = exec 'phantomjs ./web/js/qunit/run-qunit.js ./tests.html', (error, stdout, stderr) ->
     console.log('stdout: ' + stdout)
     if (error != null)
@@ -57,14 +57,11 @@ build = (source,output,notifyCallback) ->
   catch e
     compileError e, output, fileContents
 
-#
-# Write files with a header
-#
 writeJavascript = (filename, body) ->
   fs.writeFileSync filename, """
-// binaryTrunk.coffee v#{version}
+// binary-trunk.coffee v#{version}
 // Copyright (c) 2012 Justin DuJardin
-// binaryTrunk is freely distributable under the MIT license.
+// binary-trunk is freely distributable under the MIT license.
 #{body}
 """
   console.log "Wrote #{filename}"
