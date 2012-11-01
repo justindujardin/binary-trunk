@@ -246,6 +246,14 @@ class DJC.BinaryTreeTidier
       extremes.right = extremes.left = node
       return extremes
 
+    # if only a single child, assign the next available offset and return.  
+    #
+    # TODO: I'm not sure this is correct.  Visual inspection of layout tree is needed to verify. 
+    if not node.right or not node.left
+      node.offset = minimumSeparation
+      extremes.right = extremes.left = if node.left then node.left else node.right
+      return
+
     # Set the current separation to the minimum separation for the root of the
     # subtree.
     currentSeparation = minimumSeparation
