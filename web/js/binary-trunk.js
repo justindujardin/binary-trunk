@@ -2,8 +2,7 @@
 // Copyright (c) 2012 Justin DuJardin
 // binary-trunk is freely distributable under the MIT license.
 (function() {
-  var DJC, root,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  var BT, DJC, root,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -11,17 +10,15 @@
 
   DJC = root.DJC = root.DJC || {};
 
+  DJC.BT = BT = {
+    STOP: 'stop',
+    LEFT: 'left',
+    RIGHT: 'right'
+  };
+
   DJC.BinaryTreeNode = (function() {
 
     function BinaryTreeNode(left, right) {
-      this.setSide = __bind(this.setSide, this);
-
-      this.visitPostorder = __bind(this.visitPostorder, this);
-
-      this.visitInorder = __bind(this.visitInorder, this);
-
-      this.visitPreorder = __bind(this.visitPreorder, this);
-
       var _ref;
       if (left) {
         this.setLeft(left);
@@ -86,14 +83,14 @@
       if (depth == null) {
         depth = 0;
       }
-      if (visitFunction) {
-        visitFunction(this, depth, data);
+      if (visitFunction && visitFunction(this, depth, data) === BT.STOP) {
+        return BT.STOP;
       }
-      if (this.left) {
-        this.left.visitPreorder(visitFunction, depth + 1, data);
+      if (this.left && this.left.visitPreorder(visitFunction, depth + 1, data) === BT.STOP) {
+        return BT.STOP;
       }
-      if (this.right) {
-        return this.right.visitPreorder(visitFunction, depth + 1, data);
+      if (this.right && this.right.visitPreorder(visitFunction, depth + 1, data) === BT.STOP) {
+        return BT.STOP;
       }
     };
 
@@ -101,14 +98,14 @@
       if (depth == null) {
         depth = 0;
       }
-      if (this.left) {
-        this.left.visitInorder(visitFunction, depth + 1, data);
+      if (this.left && this.left.visitInorder(visitFunction, depth + 1, data) === BT.STOP) {
+        return BT.STOP;
       }
-      if (visitFunction) {
-        visitFunction(this, depth, data);
+      if (visitFunction && visitFunction(this, depth, data) === BT.STOP) {
+        return BT.STOP;
       }
-      if (this.right) {
-        return this.right.visitInorder(visitFunction, depth + 1, data);
+      if (this.right && this.right.visitInorder(visitFunction, depth + 1, data) === BT.STOP) {
+        return BT.STOP;
       }
     };
 
@@ -116,14 +113,14 @@
       if (depth == null) {
         depth = 0;
       }
-      if (this.left) {
-        this.left.visitPostorder(visitFunction, depth + 1, data);
+      if (this.left && this.left.visitPostorder(visitFunction, depth + 1, data) === BT.STOP) {
+        return BT.STOP;
       }
-      if (this.right) {
-        this.right.visitPostorder(visitFunction, depth + 1, data);
+      if (this.right && this.right.visitPostorder(visitFunction, depth + 1, data) === BT.STOP) {
+        return BT.STOP;
       }
-      if (visitFunction) {
-        return visitFunction(this, depth, data);
+      if (visitFunction && visitFunction(this, depth, data) === BT.STOP) {
+        return BT.STOP;
       }
     };
 
@@ -150,19 +147,19 @@
 
     BinaryTreeNode.prototype.getSide = function(child) {
       if (child === this.left) {
-        return 'left';
+        return BT.LEFT;
       }
       if (child === this.right) {
-        return 'right';
+        return BT.RIGHT;
       }
       throw new Error("BinaryTreeNode.getSide: not a child of this node");
     };
 
     BinaryTreeNode.prototype.setSide = function(child, side) {
       switch (side) {
-        case 'left':
+        case BT.LEFT:
           return this.setLeft(child);
-        case 'right':
+        case BT.RIGHT:
           return this.setRight(child);
         default:
           throw new Error("BinaryTreeNode.setSide: Invalid side");
@@ -279,7 +276,7 @@
     };
 
     BinaryTreeTidier.prototype.measure = function(node, level, extremes) {
-      var currentSeparation, left, leftExtremes, leftOffsetSum, minimumSeparation, right, rightExtremes, rightOffsetSum, rootSeparation, _ref, _ref1;
+      var currentSeparation, left, leftExtremes, leftOffsetSum, loops, minimumSeparation, right, rightExtremes, rightOffsetSum, rootSeparation, _ref, _ref1;
       if (level == null) {
         level = 0;
       }
@@ -324,14 +321,14 @@
         extremes.right = extremes.left = node;
         return extremes;
       }
-      if (!node.right || !node.left) {
-        node.offset = minimumSeparation;
-        extremes.right = extremes.left = node.left ? node.left : node.right;
-        return;
-      }
       currentSeparation = minimumSeparation;
       leftOffsetSum = rightOffsetSum = 0;
+      loops = 0;
       while (left && right) {
+        loops++;
+        if (loops > 100000) {
+          throw new Error("An impossibly large tree perhaps?");
+        }
         if (currentSeparation < minimumSeparation) {
           rootSeparation += minimumSeparation - currentSeparation;
           currentSeparation = minimumSeparation;

@@ -3,9 +3,9 @@
 // binary-trunk is freely distributable under the MIT license.
 (function() {
 
-  module('BinaryTreeNode');
+  module('BinaryTrees');
 
-  test('constructor', function() {
+  test('BinaryTreeNode.constructor', function() {
     var count, tree;
     tree = new DJC.BinaryTreeNode(new DJC.BinaryTreeNode, new DJC.BinaryTreeNode);
     equal(tree.left !== null && tree.right !== null, true, 'children assigned properly by constructor');
@@ -18,7 +18,7 @@
     return equal(tree.right.parent === tree, true, 'right child parent assigned properly');
   });
 
-  test('clone', function() {
+  test('BinaryTreeNode.clone', function() {
     var clone, count, fifteen, i, tree, _i;
     tree = new DJC.BinarySearchTree(0);
     for (i = _i = 0; _i <= 25; i = ++_i) {
@@ -35,7 +35,7 @@
     return equal(count, 11, 'clone node has expected 11 remaining nodes');
   });
 
-  test('isLeaf', function() {
+  test('BinaryTreeNode.isLeaf', function() {
     var i, n, tree, _i, _j, _results;
     tree = new DJC.BinarySearchTree(0);
     for (i = _i = -1; _i <= 5; i = ++_i) {
@@ -50,7 +50,7 @@
     return _results;
   });
 
-  test('rotate', function() {
+  test('BinaryTreeNode.rotate', function() {
     var i, index, node, tree, v, values, _i, _j, _k, _len, _len1, _results;
     values = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
     tree = new DJC.BinarySearchTree(0);
@@ -58,10 +58,13 @@
       i = values[_i];
       tree.insert(i);
     }
-    for (i = _j = 1; _j <= 100; i = ++_j) {
+    for (i = _j = 1; _j <= 10000; i = ++_j) {
       index = Math.floor(Math.random() * values.length);
       node = tree.find(values[index]);
       node.rotate();
+      if (node.parent) {
+        node.parent.getSide(node);
+      }
     }
     _results = [];
     for (_k = 0, _len1 = values.length; _k < _len1; _k++) {
@@ -71,7 +74,7 @@
     return _results;
   });
 
-  test('visitPreorder', function() {
+  test('BinaryTreeNode.visitPreorder', function() {
     var i, order, tree, values, _i, _len;
     values = [-1, 0, 1];
     order = [0, -1, 1];
@@ -85,7 +88,41 @@
     });
   });
 
-  test('visitInorder', function() {
+  test('BinaryTreeNode.visit[Pre/In/Post]order (Stop)', function() {
+    var i, total, tree, values, _i, _len;
+    values = [-1, 0, 1];
+    tree = new DJC.BinarySearchTree(0);
+    for (_i = 0, _len = values.length; _i < _len; _i++) {
+      i = values[_i];
+      tree.insert(i);
+    }
+    total = 0;
+    tree.visitPreorder(function(node) {
+      total += 1;
+      if (node.key === -1) {
+        return DJC.BT.STOP;
+      }
+    });
+    equal(total, 2, 'preorder stops at second node');
+    total = 0;
+    tree.visitInorder(function(node) {
+      total += 1;
+      if (node.key === -1) {
+        return DJC.BT.STOP;
+      }
+    });
+    equal(total, 1, 'inorder stops at first node');
+    total = 0;
+    tree.visitPostorder(function(node) {
+      total += 1;
+      if (node.key === -1) {
+        return DJC.BT.STOP;
+      }
+    });
+    return equal(total, 1, 'postorder stops at first node');
+  });
+
+  test('BinaryTreeNode.visitInorder', function() {
     var i, order, tree, values, _i, _len;
     values = [-1, 0, 1];
     order = [-1, 0, 1];
@@ -99,7 +136,7 @@
     });
   });
 
-  test('visitPostorder', function() {
+  test('BinaryTreeNode.visitPostorder', function() {
     var i, order, tree, values, _i, _len;
     values = [-1, 0, 1];
     order = [-1, 1, 0];
@@ -113,7 +150,7 @@
     });
   });
 
-  test('getRoot', function() {
+  test('BinaryTreeNode.getRoot', function() {
     var i, n, tree, values, _i, _j, _len, _len1, _results;
     values = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
     tree = new DJC.BinarySearchTree(0);
@@ -129,7 +166,7 @@
     return _results;
   });
 
-  test('setLeft', function() {
+  test('BinaryTreeNode.setLeft', function() {
     var one, two;
     one = new DJC.BinaryTreeNode;
     two = new DJC.BinaryTreeNode;
@@ -138,7 +175,7 @@
     return equal(two.parent === one, true, 'parent is properly assigned');
   });
 
-  test('setRight', function() {
+  test('BinaryTreeNode.setRight', function() {
     var one, two;
     one = new DJC.BinaryTreeNode;
     two = new DJC.BinaryTreeNode;
@@ -147,7 +184,7 @@
     return equal(two.parent === one, true, 'parent is properly assigned');
   });
 
-  test('getSide', function() {
+  test('BinaryTreeNode.getSide', function() {
     var i, node, tree, values, _i, _len;
     values = [-1, -2, -3, -4, 1, 2, 3, 4];
     tree = new DJC.BinarySearchTree(0);
@@ -164,7 +201,7 @@
     });
   });
 
-  test('setSide', function() {
+  test('BinaryTreeNode.setSide', function() {
     var one, tree, two;
     tree = new DJC.BinaryTreeNode;
     one = new DJC.BinaryTreeNode;
@@ -178,7 +215,7 @@
     });
   });
 
-  test('getChildren', function() {
+  test('BinaryTreeNode.getChildren', function() {
     var i, neg, one, tree, two, values, _i, _len;
     values = [-2, -1, -3, 0, 1, 2];
     tree = new DJC.BinarySearchTree(0);
@@ -197,7 +234,7 @@
     return equal(two.length, 0, 'expect no children for 2');
   });
 
-  test('getSibling', function() {
+  test('BinaryTreeNode.getSibling', function() {
     var tree;
     tree = new DJC.BinaryTreeNode(new DJC.BinaryTreeNode, new DJC.BinaryTreeNode);
     equal(tree.left.getSibling() === tree.right, true, 'left sibling is right');
@@ -205,9 +242,7 @@
     return equal(tree.getSibling(), void 0, 'root has no sibling');
   });
 
-  module('BinarySearchTree');
-
-  test('insert', function() {
+  test('BinarySearchTree.insert', function() {
     var count, i, tree, _i;
     tree = new DJC.BinarySearchTree(0);
     for (i = _i = -25; _i <= 25; i = ++_i) {
@@ -220,7 +255,7 @@
     return equal(count, 51, 'expect 51 nodes in search tree after 51 value inserts');
   });
 
-  test('find', function() {
+  test('BinarySearchTree.find', function() {
     var i, tree, _i, _len, _ref;
     tree = new DJC.BinarySearchTree(0);
     _ref = [-25, 1337, 2];
@@ -236,9 +271,7 @@
     return equal(tree.find(25) === null, true);
   });
 
-  module('TreeLayout');
-
-  test('Reingold-Tilford', function() {
+  test('BinaryTreeTidier.layout', function() {
     var result, tree, val, _i;
     tree = new DJC.BinarySearchTree(0);
     for (val = _i = -100; _i <= 100; val = ++_i) {
@@ -249,7 +282,7 @@
     return this;
   });
 
-  test('Aesthetic 1 - all nodes at a given depth share the same y coordinate', function() {
+  test('BinaryTreeTidier.layout (Aesthetic 1)', function() {
     var k, nodeGroups, tidier, tree, v, val, yCoords, _i;
     tree = new DJC.BinarySearchTree(0);
     for (val = _i = -5; _i <= 5; val = ++_i) {
@@ -274,7 +307,7 @@
     return this;
   });
 
-  test('Aesthetic 2 - left and right children should be to the left and right of the parent in space', function() {
+  test('BinaryTreeTidier.layout (Aesthetic 2)', function() {
     var nodes, tidier, tree, val, _i, _len, _ref;
     tree = new DJC.BinarySearchTree(0);
     _ref = [-2, -1, -3, 2, 3, 1];
@@ -301,7 +334,7 @@
     return this;
   });
 
-  test('Aesthetic 3 - children should positioned equidistant from parent', function() {
+  test('BinaryTreeTidier.layout (Aesthetic 3)', function() {
     var nodes, tidier, tree, val, _i, _len, _ref;
     tidier = new DJC.BinaryTreeTidier;
     tree = new DJC.BinarySearchTree(0);
@@ -326,7 +359,7 @@
     return this;
   });
 
-  test('Aesthetic 4.1 - mirrored subtrees should be reflections of each other visually', function() {
+  test('BinaryTreeTidier.layout (Aesthetic 4.1)', function() {
     var i, left, leftDist, nodes, right, rightDist, tidier, tree, val, _i, _j, _k, _len, _len1, _ref, _ref1, _results;
     tree = new DJC.BinarySearchTree(0);
     _ref = [-2, -1, -4, -3, -5];
@@ -353,7 +386,7 @@
     return _results;
   });
 
-  test('Aesthetic 4.2 - identical subtrees should be rendered the identically, regardless of position', function() {
+  test('BinaryTreeTidier.layout (Aesthetic 4.2)', function() {
     var lDistance, nodes, rDistance, result, tidier, tree, val, _i, _len, _ref;
     tree = new DJC.BinarySearchTree(0);
     _ref = [7, 4, 3, 5, 13, 12, 14, -3, -6, -2, -7, -13, -14, -12];
