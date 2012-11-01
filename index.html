@@ -286,11 +286,20 @@ subtree consisting of itself.</p>
       <span class="nv">extremes.right = extremes.left = </span><span class="nx">node</span>
       <span class="k">return</span> <span class="nx">extremes</span></pre></div></span>                      </li>                              <li id="section-40">             <span class="annotation">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>                           
 
+<p>if only a single child, assign the next available offset and return.  </p>
+
+<p>TODO: I'm not sure this is correct.  Visual inspection of layout tree is needed to verify. </p>
+
+             </span>                          <span class="content"><div class="highlight"><pre>    <span class="k">if</span> <span class="o">not</span> <span class="nx">node</span><span class="p">.</span><span class="nx">right</span> <span class="o">or</span> <span class="o">not</span> <span class="nx">node</span><span class="p">.</span><span class="nx">left</span>
+      <span class="nv">node.offset = </span><span class="nx">minimumSeparation</span>
+      <span class="nv">extremes.right = extremes.left = </span><span class="k">if</span> <span class="nx">node</span><span class="p">.</span><span class="nx">left</span> <span class="k">then</span> <span class="nx">node</span><span class="p">.</span><span class="nx">left</span> <span class="k">else</span> <span class="nx">node</span><span class="p">.</span><span class="nx">right</span>
+      <span class="k">return</span></pre></div></span>                      </li>                              <li id="section-41">             <span class="annotation">               <div class="pilwrap">                 <a class="pilcrow" href="#section-41">&#182;</a>               </div>                           
+
 <p>Set the current separation to the minimum separation for the root of the
 subtree.</p>
 
              </span>                          <span class="content"><div class="highlight"><pre>    <span class="nv">currentSeparation = </span><span class="nx">minimumSeparation</span>
-    <span class="nv">leftOffsetSum = rightOffsetSum = </span><span class="mi">0</span></pre></div></span>                      </li>                              <li id="section-41">             <span class="annotation">               <div class="pilwrap">                 <a class="pilcrow" href="#section-41">&#182;</a>               </div>                           
+    <span class="nv">leftOffsetSum = rightOffsetSum = </span><span class="mi">0</span></pre></div></span>                      </li>                              <li id="section-42">             <span class="annotation">               <div class="pilwrap">                 <a class="pilcrow" href="#section-42">&#182;</a>               </div>                           
 
 <p>Traverse the subtrees until one of them is exhausted, pushing them apart 
 as needed.</p>
@@ -319,13 +328,13 @@ as needed.</p>
       <span class="k">else</span>
         <span class="nx">rightOffsetSum</span> <span class="o">+=</span> <span class="nx">right</span><span class="p">.</span><span class="nx">offset</span> 
         <span class="nx">currentSeparation</span> <span class="o">+=</span> <span class="nx">right</span><span class="p">.</span><span class="nx">offset</span>
-        <span class="nv">right = </span><span class="nx">right</span><span class="p">.</span><span class="nx">thread</span> <span class="o">or</span> <span class="nx">right</span><span class="p">.</span><span class="nx">right</span></pre></div></span>                      </li>                              <li id="section-42">             <span class="annotation">               <div class="pilwrap">                 <a class="pilcrow" href="#section-42">&#182;</a>               </div>                           
+        <span class="nv">right = </span><span class="nx">right</span><span class="p">.</span><span class="nx">thread</span> <span class="o">or</span> <span class="nx">right</span><span class="p">.</span><span class="nx">right</span></pre></div></span>                      </li>                              <li id="section-43">             <span class="annotation">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>                           
 
 <p>Set the root offset, and include it in the accumulated offsets.</p>
 
              </span>                          <span class="content"><div class="highlight"><pre>    <span class="nv">node.offset = </span><span class="p">(</span><span class="nx">rootSeparation</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
     <span class="nx">leftOffsetSum</span> <span class="o">-=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">offset</span>
-    <span class="nx">rightOffsetSum</span> <span class="o">+=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">offset</span></pre></div></span>                      </li>                              <li id="section-43">             <span class="annotation">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>                           
+    <span class="nx">rightOffsetSum</span> <span class="o">+=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">offset</span></pre></div></span>                      </li>                              <li id="section-44">             <span class="annotation">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>                           
 
 <p>Update right and left extremes</p>
 
@@ -340,7 +349,7 @@ as needed.</p>
       <span class="nx">extremes</span><span class="p">.</span><span class="nx">right</span><span class="p">.</span><span class="nx">offset</span> <span class="o">-=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">offset</span>
     <span class="k">else</span>
       <span class="nv">extremes.right = </span><span class="nx">rightExtremes</span><span class="p">.</span><span class="nx">right</span>
-      <span class="nx">extremes</span><span class="p">.</span><span class="nx">right</span><span class="p">.</span><span class="nx">offset</span> <span class="o">+=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">offset</span></pre></div></span>                      </li>                              <li id="section-44">             <span class="annotation">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>                           
+      <span class="nx">extremes</span><span class="p">.</span><span class="nx">right</span><span class="p">.</span><span class="nx">offset</span> <span class="o">+=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">offset</span></pre></div></span>                      </li>                              <li id="section-45">             <span class="annotation">               <div class="pilwrap">                 <a class="pilcrow" href="#section-45">&#182;</a>               </div>                           
 
 <p>If the subtrees have uneven heights, check to see if they need to be 
 threaded.  If threading is required, it will affect only one node.</p>
@@ -350,11 +359,11 @@ threaded.  If threading is required, it will affect only one node.</p>
       <span class="nv">rightExtremes.right.offset = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span> <span class="p">(</span><span class="nx">rightExtremes</span><span class="p">.</span><span class="nx">right</span><span class="p">.</span><span class="nx">offset</span> <span class="o">+</span> <span class="nx">node</span><span class="p">.</span><span class="nx">offset</span><span class="p">)</span> <span class="o">-</span> <span class="nx">leftOffsetSum</span>
     <span class="k">else</span> <span class="k">if</span> <span class="nx">right</span> <span class="o">and</span> <span class="nx">right</span> <span class="o">!=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">right</span>
       <span class="nv">leftExtremes.left.thread = </span><span class="nx">right</span>
-      <span class="nv">leftExtremes.left.offset = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span> <span class="p">(</span><span class="nx">leftExtremes</span><span class="p">.</span><span class="nx">left</span><span class="p">.</span><span class="nx">offset</span> <span class="o">-</span> <span class="nx">node</span><span class="p">.</span><span class="nx">offset</span><span class="p">)</span> <span class="o">-</span> <span class="nx">rightOffsetSum</span></pre></div></span>                      </li>                              <li id="section-45">             <span class="annotation">               <div class="pilwrap">                 <a class="pilcrow" href="#section-45">&#182;</a>               </div>                           
+      <span class="nv">leftExtremes.left.offset = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span> <span class="p">(</span><span class="nx">leftExtremes</span><span class="p">.</span><span class="nx">left</span><span class="p">.</span><span class="nx">offset</span> <span class="o">-</span> <span class="nx">node</span><span class="p">.</span><span class="nx">offset</span><span class="p">)</span> <span class="o">-</span> <span class="nx">rightOffsetSum</span></pre></div></span>                      </li>                              <li id="section-46">             <span class="annotation">               <div class="pilwrap">                 <a class="pilcrow" href="#section-46">&#182;</a>               </div>                           
 
 <p>Return this</p>
 
-             </span>                          <span class="content"><div class="highlight"><pre>    <span class="nx">@</span></pre></div></span>                      </li>                              <li id="section-46">             <span class="annotation">               <div class="pilwrap">                 <a class="pilcrow" href="#section-46">&#182;</a>               </div>                           
+             </span>                          <span class="content"><div class="highlight"><pre>    <span class="nx">@</span></pre></div></span>                      </li>                              <li id="section-47">             <span class="annotation">               <div class="pilwrap">                 <a class="pilcrow" href="#section-47">&#182;</a>               </div>                           
 
 <p>Transform relative to absolute coordinates, and measure the bounds of the tree.
 Return a measurement of the tree in output units.</p>             </span>                          <span class="content"><div class="highlight"><pre>  <span class="nv">transform: </span><span class="nf">(node, x=0,unitMultiplier=1,measure) -&gt;</span>

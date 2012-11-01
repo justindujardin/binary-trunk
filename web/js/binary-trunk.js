@@ -321,6 +321,11 @@
         extremes.right = extremes.left = node;
         return extremes;
       }
+      if (!node.right || !node.left) {
+        node.offset = minimumSeparation;
+        extremes.right = extremes.left = node.left ? node.left : node.right;
+        return;
+      }
       currentSeparation = minimumSeparation;
       leftOffsetSum = rightOffsetSum = 0;
       loops = 0;
