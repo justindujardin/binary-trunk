@@ -45,18 +45,19 @@ watch = (file, changeTasks, notifyCallback) ->
   notifyCallback() if notifyCallback
 
 build = (source,output,notifyCallback) ->
-  fileContents = null
-  try
-    fileContents = "#{fs.readFileSync source}"
-    javascript = CoffeeScript.compile fileContents
-    writeJavascript output, javascript
-    unless process.env.MINIFY is 'false'
-      writeJavascript output.replace(/\.js$/,'.min.js'), (
-        uglify.gen_code uglify.ast_squeeze uglify.ast_mangle parser.parse javascript
-      )
-    notifyCallback() if typeof notifyCallback is 'function'
-  catch e
-    compileError e, output, fileContents
+  exec "mkdir -p", ->
+    fileContents = null
+    try
+      fileContents = "#{fs.readFileSync source}"
+      javascript = CoffeeScript.compile fileContents
+      writeJavascript output, javascript
+      unless process.env.MINIFY is 'false'
+        writeJavascript output.replace(/\.js$/,'.min.js'), (
+          uglify.gen_code uglify.ast_squeeze uglify.ast_mangle parser.parse javascript
+        )
+      notifyCallback() if typeof notifyCallback is 'function'
+    catch e
+      compileError e, output, fileContents
 
 writeJavascript = (filename, body) ->
   fs.writeFileSync filename, """
