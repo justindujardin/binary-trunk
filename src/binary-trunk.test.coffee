@@ -1,13 +1,13 @@
 # This is the test-suite for [binary-trunk](./index.html).
 
 # ## Binary Tree Node
-module 'BinaryTreeNode'
+module 'BinaryTrees'
 
 # **should accept children in the constructor**
 
 # check that the children passed in the constructor are properly assigned,
 # and that their `parent` variables are also set to the root node properly.
-test 'constructor', ->
+test 'BinaryTreeNode.constructor', ->
   tree = new DJC.BinaryTreeNode new DJC.BinaryTreeNode, new DJC.BinaryTreeNode
   equal tree.left != null and tree.right != null, true,
     'children assigned properly by constructor'
@@ -25,7 +25,7 @@ test 'constructor', ->
 # check to be sure that when we clone off a known node of the tree
 # that its children, and only its children, are still searchable 
 # from the cloned tree.
-test 'clone', ->
+test 'BinaryTreeNode.clone', ->
   tree = new DJC.BinarySearchTree 0
   tree.insert i for i in [0..25]
   fifteen = tree.find 15
@@ -43,7 +43,7 @@ test 'clone', ->
 
 # check that the known extremes of a tree are reported as leaf nodes
 # and that all other known non-extremes are not.
-test 'isLeaf', ->
+test 'BinaryTreeNode.isLeaf', ->
   tree = new DJC.BinarySearchTree 0
   tree.insert i for i in [-1..5]
   equal tree.find(-1).isLeaf(), true, 
@@ -57,21 +57,22 @@ test 'isLeaf', ->
 # test to ensure that rotations do not compromise the search tree
 # by randomly rotating nodes, and verifying that all known numbers
 # can still be found.
-test 'rotate', ->
+test 'BinaryTreeNode.rotate', ->
   values = [-5..5]
   tree = new DJC.BinarySearchTree 0
   tree.insert i for i in values
-  for i in [1..100]
+  for i in [1..10000]
     index = Math.floor(Math.random() * values.length)
     node = tree.find values[index]
     node.rotate()
+    node.parent.getSide node if node.parent 
   equal tree.find(v) != null, true for v in values
 
 # **should support preorder visiting**
 
 # check the order in which the nodes are visited against what is 
 # expected for a preorder tree visit.
-test 'visitPreorder', -> 
+test 'BinaryTreeNode.visitPreorder', -> 
   values = [-1,0,1]
   order = [0,-1,1]
   tree = new DJC.BinarySearchTree 0
@@ -79,11 +80,36 @@ test 'visitPreorder', ->
   tree.visitPreorder (node) -> 
     equal node.key, order.shift()
 
+# check that returning `node.STOP` cancels visits.
+test 'BinaryTreeNode.visit[Pre/In/Post]order (Stop)', ->
+  values = [-1,0,1]
+  tree = new DJC.BinarySearchTree 0
+  tree.insert i for i in values
+
+  total = 0
+  tree.visitPreorder (node) ->
+    total += 1
+    return DJC.BT.STOP if node.key == -1
+  equal total, 2, 'preorder stops at second node'
+
+  total = 0
+  tree.visitInorder (node) ->
+    total += 1
+    return DJC.BT.STOP if node.key == -1
+  equal total, 1, 'inorder stops at first node'
+
+  total = 0
+  tree.visitPostorder (node) ->
+    total += 1
+    return DJC.BT.STOP if node.key == -1
+  equal total, 1, 'postorder stops at first node'
+
+
 # **should support inorder visiting**
 
 # check the order in which the nodes are visited against what is 
 # expected for a inorder tree visit.
-test 'visitInorder', ->
+test 'BinaryTreeNode.visitInorder', ->
   values = [-1,0,1]
   order = [-1,0,1]
   tree = new DJC.BinarySearchTree 0
@@ -95,7 +121,7 @@ test 'visitInorder', ->
 
 # check the order in which the nodes are visited against what is 
 # expected for a postorder tree visit.
-test 'visitPostorder', ->
+test 'BinaryTreeNode.visitPostorder', ->
   values = [-1,0,1]
   order = [-1,1,0]
   tree = new DJC.BinarySearchTree 0
@@ -107,7 +133,7 @@ test 'visitPostorder', ->
 
 # verify that `getRoot` is working as expected by checking that
 # every node in the tree returns the same value when it is invoked.
-test 'getRoot', ->
+test 'BinaryTreeNode.getRoot', ->
   values = [-5..5]
   tree = new DJC.BinarySearchTree 0
   tree.insert i for i in values
@@ -116,7 +142,7 @@ test 'getRoot', ->
 # **should have a left child setter**
 
 # verify that the left child setter properly assigns parent link.
-test 'setLeft', -> 
+test 'BinaryTreeNode.setLeft', -> 
   one = new DJC.BinaryTreeNode 
   two = new DJC.BinaryTreeNode
   one.setLeft two
@@ -128,7 +154,7 @@ test 'setLeft', ->
 # **should have a right child setter**
 
 # verify that the right child setter properly assigns parent link.
-test 'setRight', -> 
+test 'BinaryTreeNode.setRight', -> 
   one = new DJC.BinaryTreeNode 
   two = new DJC.BinaryTreeNode
   one.setRight two
@@ -147,7 +173,7 @@ test 'setRight', ->
 #  
 # In the event that a node is passed that is not a child, an exception
 # will be thrown.
-test 'getSide', ->
+test 'BinaryTreeNode.getSide', ->
   values = [-1,-2,-3,-4,1,2,3,4]
   tree = new DJC.BinarySearchTree 0
   tree.insert i for i in values
@@ -165,7 +191,7 @@ test 'getSide', ->
 # the proper left or right node on the new parent.
 #  
 # check that an exception is thrown when a bad side string is passed.
-test 'setSide', ->
+test 'BinaryTreeNode.setSide', ->
   tree = new DJC.BinaryTreeNode
   one = new DJC.BinaryTreeNode
   two = new DJC.BinaryTreeNode
@@ -180,7 +206,7 @@ test 'setSide', ->
 # **should be able to return children as a list**
 
 # check a few permutations of expected results from getChildren.  
-test 'getChildren', ->
+test 'BinaryTreeNode.getChildren', ->
   values = [-2,-1,-3,0,1,2]
   tree = new DJC.BinarySearchTree 0
   tree.insert i for i in values 
@@ -199,7 +225,7 @@ test 'getChildren', ->
 
 # check that siblings are reported properly for a known tree
 # structure.
-test 'getSibling', ->
+test 'BinaryTreeNode.getSibling', ->
   tree = new DJC.BinaryTreeNode new DJC.BinaryTreeNode, new DJC.BinaryTreeNode
   equal tree.left.getSibling() is tree.right, true,
     'left sibling is right' 
@@ -209,25 +235,24 @@ test 'getSibling', ->
     'root has no sibling'
 
 # ## Binary Search Tree
-module 'BinarySearchTree'
 
 # **should insert values into tree**
 
 # Check that after a known number of inserts, there are the expected
 # number of nodes in the tree.
-test 'insert', ->
-	tree = new DJC.BinarySearchTree 0
-	tree.insert i for i in [-25..25]
-	count = 0
-	tree.visitInorder (node) -> count++
-	equal count, 51,
-		'expect 51 nodes in search tree after 51 value inserts'
+test 'BinarySearchTree.insert', ->
+  tree = new DJC.BinarySearchTree 0
+  tree.insert i for i in [-25..25]
+  count = 0
+  tree.visitInorder (node) -> count++
+  equal count, 51,
+    'expect 51 nodes in search tree after 51 value inserts'
   
 # **should find nodes by key**
 
 # check that after known inserts, find returns the expected results,
 # and that invalid finds return null.
-test 'find', ->
+test 'BinarySearchTree.find', ->
   tree = new DJC.BinarySearchTree 0
   tree.insert i for i in [-25,1337,2]
   
@@ -240,13 +265,12 @@ test 'find', ->
   equal tree.find(25)   == null, true
 
 # ## Visual Tree Layout
-module 'TreeLayout'
 
 # **should layout tree without error**
 
 # check that the tidier tree layout algorithm succeeds without exception,
 # and that it returns a non-null result.
-test 'Reingold-Tilford', ->
+test 'BinaryTreeTidier.layout', ->
   tree = new DJC.BinarySearchTree 0
   tree.insert val for val in [-100..100]
   result = new DJC.BinaryTreeTidier().layout tree
@@ -259,7 +283,7 @@ test 'Reingold-Tilford', ->
 # check that aesthetic 1 is satisfied by: building a tree, gathering up all 
 # the nodes, grouping them by their depth, and then asserting that each node
 # in a depth group has the same y-coordinate.
-test 'Aesthetic 1 - all nodes at a given depth share the same y coordinate', ->
+test 'BinaryTreeTidier.layout (Aesthetic 1)', ->
   tree = new DJC.BinarySearchTree 0
   tree.insert val for val in [-5..5]
   tidier = new DJC.BinaryTreeTidier
@@ -279,7 +303,7 @@ test 'Aesthetic 1 - all nodes at a given depth share the same y coordinate', ->
 # check that aesthetic 2 is satisfied by: building a tree, visiting each 
 # node, asserting that its left and right children are positioned to the 
 # left and right of it.
-test 'Aesthetic 2 - left and right children should be to the left and right of the parent in space', ->
+test 'BinaryTreeTidier.layout (Aesthetic 2)', ->
   tree = new DJC.BinarySearchTree 0
   tree.insert val for val in [-2,-1,-3,2,3,1]
   tidier = new DJC.BinaryTreeTidier
@@ -302,7 +326,7 @@ test 'Aesthetic 2 - left and right children should be to the left and right of t
 # check that aesthetic 3 is satisfied by: building a tree, visiting each 
 # node, and if it's a non-root node, checking that its children are 
 # equidistant from it.
-test 'Aesthetic 3 - children should positioned equidistant from parent', ->
+test 'BinaryTreeTidier.layout (Aesthetic 3)', ->
   tidier = new DJC.BinaryTreeTidier
   tree = new DJC.BinarySearchTree 0
   tree.insert val for val in [-2,-1,-3,2,3,1]
@@ -323,7 +347,7 @@ test 'Aesthetic 3 - children should positioned equidistant from parent', ->
 # check that aesthetic 4 reflection is satisfied by: building a tree, visiting
 # the nodes in the right side of the tree, and asserting that each mirrored node
 # on the left side is the same distance from the root as it.
-test 'Aesthetic 4.1 - mirrored subtrees should be reflections of each other visually', ->
+test 'BinaryTreeTidier.layout (Aesthetic 4.1)', ->
   tree = new DJC.BinarySearchTree 0
   tree.insert val for val in [-2,-1,-4,-3,-5]
   tree.insert val for val in [2,1,4,3,5]
@@ -343,7 +367,7 @@ test 'Aesthetic 4.1 - mirrored subtrees should be reflections of each other visu
 # check that aesthetic 4 position independence is satisfied by: building a tree, 
 # picking known nodes that are identical but in different positions of the tree,
 # and ensuring that their children are positioned the same.
-test 'Aesthetic 4.2 - identical subtrees should be rendered the identically, regardless of position', ->
+test 'BinaryTreeTidier.layout (Aesthetic 4.2)', ->
   tree = new DJC.BinarySearchTree 0
   tree.insert val for val in [7,4,3,5,13,12,14,-3,-6,-2,-7,-13,-14,-12]
   tidier       = new DJC.BinaryTreeTidier

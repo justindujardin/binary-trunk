@@ -31,6 +31,7 @@ task 'test', 'test the library using phantomjs', ->
     if (error != null)
       console.log('stderr: ' + stderr)
       console.log('exec error: ' + error)
+    process.exit if error != null then 1 else 0
 
 watching = {}
 watch = (file, changeTasks, notifyCallback) ->

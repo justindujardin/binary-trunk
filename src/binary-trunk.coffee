@@ -1,17 +1,36 @@
-# **binary-trunk** is a bootstrap set of classes for building up, and working
-# with, binary trees in CoffeeScript.  It provides a fleshed-out binary tree 
-# node, various tree implementations, and a 
-# [Reingold-Tilford](http://emr.cs.iit.edu/~reingold/tidier-drawings.pdf) 
-# layout algorithm for visualizing the trees. 
+# [github]: https://github.com/justindujardin/binary-trunk
+# [issues]: https://github.com/justindujardin/binary-trunk/issues
+# [wiki]: https://github.com/justindujardin/binary-trunk/wiki
+# [license]: https://github.com/justindujardin/binary-trunk/blob/master/LICENSE
+# [binary-trunk]: ./index.html
+# [testcode]: ./binary-trunk.test.html
+# [tests]: ./tests.html
+# [node]: #BinaryTreeNode
+# [search]: #BinarySearchTree
+# [layout]: #BinaryTreeTidier
+
+# [binary-trunk][] makes working with **binary trees** in *CoffeeScript* and 
+# *Javascript* easy by providing a well-equipped **[tree node][node]**, example 
+# **[search tree][search]** implementation, and an excellent **[layout algorithm][layout]**
+# implementation for visualizing the contents of your trees.
 #  
-# There is also a [full test-suite](tests.html), with accompanying 
-# [annotated source code](./binary-trunk.test.html)
+# The [source code][github] is available under the [MIT license][license], there is 
+# a [thorough test-suite][tests] with accompanying [annotated test-suite code][testcode]
 #  
-# 
 root = this
 DJC = root.DJC = root.DJC or {}
 
-# ## BinaryTreeNode
+# ## Constants
+DJC.BT = BT =
+  # Return this from a node visit function to abort a tree visit.
+  STOP : 'stop'
+  # The constant representing the left child side of a node.
+  LEFT : 'left'
+  # The constant representing the right child side of a node.
+  RIGHT: 'right'
+
+# ## <a id="BinaryTreeNode"></a>BinaryTreeNode
+
 
 # The binary tree node is the base node for all of our trees, and provides a
 # rich set of methods for constructing, inspecting, and modifying them.
@@ -66,22 +85,24 @@ class DJC.BinaryTreeNode
   # Each visit method accepts a function that will be invoked for each node in the 
   # tree.  The callback function is passed three arguments: the node being
   # visited, the current depth in the tree, and a user specified data parameter.
+  #  
+  # *Traversals may be canceled by returning `DJC.BT.STOP` from any visit function.*
 
   # Preorder : *Visit -> Left -> Right*
-  visitPreorder:(visitFunction, depth=0, data) =>
-    visitFunction(@, depth, data) if visitFunction
-    @left.visitPreorder(visitFunction, depth+1, data) if @left
-    @right.visitPreorder(visitFunction, depth+1, data) if @right
+  visitPreorder:(visitFunction, depth=0, data) ->
+    return BT.STOP if visitFunction and visitFunction(@, depth, data) == BT.STOP
+    return BT.STOP if @left and @left.visitPreorder(visitFunction, depth+1, data) == BT.STOP
+    return BT.STOP if @right and @right.visitPreorder(visitFunction, depth+1, data) == BT.STOP
   # Inorder : *Left -> Visit -> Right*
-  visitInorder:(visitFunction, depth=0, data) =>
-    @left.visitInorder(visitFunction, depth+1,data) if @left
-    visitFunction(@, depth, data) if visitFunction
-    @right.visitInorder(visitFunction, depth+1, data) if @right
+  visitInorder:(visitFunction, depth=0, data) ->
+    return BT.STOP if @left and @left.visitInorder(visitFunction, depth+1,data) == BT.STOP
+    return BT.STOP if visitFunction and visitFunction(@, depth, data) == BT.STOP
+    return BT.STOP if @right and @right.visitInorder(visitFunction, depth+1, data) == BT.STOP
   # Postorder : *Left -> Right -> Visit*
-  visitPostorder:(visitFunction, depth=0, data) =>
-    @left.visitPostorder(visitFunction, depth+1, data) if @left
-    @right.visitPostorder(visitFunction, depth+1, data) if @right
-    visitFunction(@, depth, data) if visitFunction
+  visitPostorder:(visitFunction, depth=0, data) ->
+    return BT.STOP if @left and @left.visitPostorder(visitFunction, depth+1, data) == BT.STOP
+    return BT.STOP if @right and @right.visitPostorder(visitFunction, depth+1, data) == BT.STOP
+    return BT.STOP if visitFunction and visitFunction(@, depth, data) == BT.STOP
   
   # Return the root element of this tree
   getRoot:() ->
@@ -106,15 +127,15 @@ class DJC.BinaryTreeNode
 
   # Determine whether the given `child` is the left or right child of this node
   getSide:(child) ->
-    return 'left' if child == @left
-    return 'right' if child == @right
+    return BT.LEFT if child == @left
+    return BT.RIGHT if child == @right
     throw new Error "BinaryTreeNode.getSide: not a child of this node"
 
   # Set a new `child` on the given `side`
-  setSide:(child,side) =>
+  setSide:(child,side) ->
     switch side
-      when 'left' then @setLeft(child)
-      when 'right' then @setRight(child)
+      when BT.LEFT then @setLeft(child)
+      when BT.RIGHT then @setRight(child)
       else throw new Error "BinaryTreeNode.setSide: Invalid side"
 
   # Get children as an array.  If there are two children, the first object will 
@@ -132,8 +153,7 @@ class DJC.BinaryTreeNode
     return @parent.right if @parent.left is @
     return @parent.left if @parent.right is @
 
-
-# ## BinarySearchTree
+# ## <a id="BinarySearchTree"></a>BinarySearchTree
 
 # A very simple binary search tree that relies on keys that support 
 # operator value comparison.
@@ -179,7 +199,7 @@ class DJC.BinarySearchTree extends DJC.BinaryTreeNode
     null
 
 
-# ## BinaryTreeTidier
+# ## <a id="BinaryTreeTidier"></a>BinaryTreeTidier
 
 # Implement a Reingold-Tilford 'tidier' tree layout algorithm.
 class DJC.BinaryTreeTidier
@@ -226,12 +246,6 @@ class DJC.BinaryTreeTidier
       extremes.right = extremes.left = node
       return extremes
 
-    # if only a single child, assign the next available offset and return.   
-    if not node.right or not node.left
-      node.offset = minimumSeparation
-      extremes.right = extremes.left = if node.left then node.left else node.right
-      return
-
     # Set the current separation to the minimum separation for the root of the
     # subtree.
     currentSeparation = minimumSeparation
@@ -239,7 +253,10 @@ class DJC.BinaryTreeTidier
 
     # Traverse the subtrees until one of them is exhausted, pushing them apart 
     # as needed.
+    loops = 0
     while left and right 
+      loops++
+      throw new Error "An impossibly large tree perhaps?" if loops > 100000
       if currentSeparation < minimumSeparation 
         rootSeparation += (minimumSeparation - currentSeparation)
         currentSeparation = minimumSeparation
