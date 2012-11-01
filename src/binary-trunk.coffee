@@ -9,13 +9,13 @@
 # [search]: #BinarySearchTree
 # [layout]: #BinaryTreeTidier
 
-# [binary-trunk][] makes working with **binary trees** in *CoffeeScript* and 
-# *Javascript* easy by providing a well-equipped **[tree node][node]**, example 
-# **[search tree][search]** implementation, and an excellent **[layout algorithm][layout]**
+# [binary-trunk][] tries to make working with **binary trees** in *CoffeeScript* and 
+# *Javascript* easy, by providing a well-equipped *[tree node][node]*, example 
+# *[search tree][search]* implementation, and a *[layout algorithm][layout]*
 # implementation for visualizing the contents of your trees.
 #  
 # The [source code][github] is available under the [MIT license][license], there is 
-# a [thorough test-suite][tests] with accompanying [annotated test-suite code][testcode]
+# a [thorough test-suite][tests], with accompanying [annotated test-suite code][testcode]
 #  
 root = this
 DJC = root.DJC = root.DJC or {}
