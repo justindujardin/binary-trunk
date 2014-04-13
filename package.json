@@ -8,7 +8,7 @@
     "coffeescript"
   ],
   "author": "Justin DuJardin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "licenses": [
     {
       "type": "MIT",
@@ -36,5 +36,6 @@
     "grunt-conventional-changelog": "~1.1.0",
     "grunt-npm": "0.0.2"
   },
-  "main": "./lib/binary-trunk.js"
+  "main": "./lib/binary-trunk.js",
+  "contributors": []
 }
