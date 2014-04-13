@@ -1,3 +1,12 @@
+<a name="0.1.1"></a>
+### 0.1.1 (2014-04-13)
+
+
+#### Features
+
+* **deploy:** automatically attribute and bump patch version by default ((ad6970df))
+
+
 <a name="0.1.0"></a>
 ## 0.1.0 (2014-04-13)
 
