@@ -1,0 +1,21 @@
+{
+  "name": "binary-trunk",
+  "version": "0.0.3",
+  "homepage": "https://github.com/justindujardin/binary-trunk",
+  "authors": [
+    "Justin DuJardin <justin@dujardinconsulting.com>"
+  ],
+  "description": "Binary Tree node classes",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "underscore": "~1.6.0"
+  }
+}
