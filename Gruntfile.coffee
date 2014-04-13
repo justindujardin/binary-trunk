@@ -62,8 +62,8 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'release', 'Build, bump and tag a new release.', (type) ->
     grunt.task.run [
-      "bump:#{type||'patch'}:bump-only"
       'npm-contributors'
+      "bump:#{type||'patch'}:bump-only"
       'changelog'
       'bump-commit'
     ]
