@@ -1,3 +1,9 @@
+###
+   Binary Trunk Test Suite
+   Copyright 2012-2014 Justin DuJardin and Contributors
+   Licensed under MIT (https://github.com/justindujardin/binary-trunk/blob/master/LICENSE)
+###
+
 # This is the test-suite for [binary-trunk](./index.html).
 
 # ## Binary Tree Node

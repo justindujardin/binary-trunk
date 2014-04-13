@@ -1,3 +1,9 @@
+###
+   Binary Trunk
+   Copyright 2012-2014 Justin DuJardin and Contributors
+   Licensed under MIT (https://github.com/justindujardin/binary-trunk/blob/master/LICENSE)
+###
+
 # [github]: https://github.com/justindujardin/binary-trunk
 # [issues]: https://github.com/justindujardin/binary-trunk/issues
 # [wiki]: https://github.com/justindujardin/binary-trunk/wiki
