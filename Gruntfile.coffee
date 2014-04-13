@@ -16,7 +16,7 @@ module.exports = (grunt) ->
       files: ['package.json', 'bower.json']
       updateConfigs: ['pkg'],
       commit: true,
-      commitMessage: 'Release v%VERSION%',
+      commitMessage: 'chore(deploy): release v%VERSION%',
       commitFiles: ['package.json','bower.json','CHANGELOG.md'], # '-a' for all files
       createTag: true,
       tagName: 'v%VERSION%',
@@ -27,6 +27,9 @@ module.exports = (grunt) ->
 
     changelog: {}
 
+    'npm-contributors':
+      options:
+        commitMessage: 'chore(attribution): update contributors'
 
     watch:
       tests:
@@ -52,7 +55,15 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-karma'
   grunt.loadNpmTasks 'grunt-bump'
   grunt.loadNpmTasks 'grunt-conventional-changelog'
+  grunt.loadNpmTasks 'grunt-npm'
 
   grunt.registerTask 'default', ['karma:unit', 'coffee']
-  grunt.registerTask 'live',    ['default','watch']
-  grunt.registerTask 'publish', ['bump-only:minor','changelog','bump-commit']
+  grunt.registerTask 'develop',    ['default','watch']
+
+  grunt.registerTask 'release', 'Build, bump and tag a new release.', (type) ->
+    grunt.task.run [
+      "bump:#{type||'patch'}:bump-only"
+      'npm-contributors'
+      'changelog'
+      'bump-commit'
+    ]

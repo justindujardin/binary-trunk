@@ -33,7 +33,8 @@
     "karma-firefox-launcher": "~0.1.3",
     "karma-qunit": "~0.1.1",
     "grunt-cli": "~0.1.13",
-    "grunt-conventional-changelog": "~1.1.0"
+    "grunt-conventional-changelog": "~1.1.0",
+    "grunt-npm": "0.0.2"
   },
   "main": "./lib/binary-trunk.js"
 }
