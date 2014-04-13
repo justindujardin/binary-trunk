@@ -1,30 +1,36 @@
 {
-    "name": "binaryTrunk",
-    "description": "Binary Trees for CoffeeScript",
-    "keywords": [
-        "binary",
-        "trees",
-        "layout",
-        "coffeescript"
-    ],
-    "author": "Justin DuJardin",
-    "version": "0.0.1",
-    "licenses": [
-        {
-            "type": "MIT",
-            "url": "http://opensource.org/licenses/mit-license.php"
-        }
-    ],
-    "engines": {
-        "node": ">=0.2.0"
-    },
-    "scripts": {
-        "test": "cake test"
-    },    
-    "devDependencies": {
-        "coffee-script": ">=1.3.3",
-        "uglify-js"    : ">=1.2.5",      
-        "docco"        : "git://github.com/justindujardin/docco.git"
-    },
-    "main": "./lib/binaryTrunk"
+  "name": "binary-trunk",
+  "description": "Binary Trees for CoffeeScript",
+  "keywords": [
+    "binary",
+    "trees",
+    "layout",
+    "coffeescript"
+  ],
+  "author": "Justin DuJardin",
+  "version": "0.0.2",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/mit-license.php"
+    }
+  ],
+  "engines": {
+    "node": ">=0.2.0"
+  },
+  "scripts": {
+    "test": "grunt karma:unit"
+  },
+  "devDependencies": {
+    "coffee-script": ">=1.3.3",
+    "uglify-js": ">=1.2.5",
+    "docco": "git://github.com/justindujardin/docco.git",
+    "grunt": "~0.4.4",
+    "grunt-contrib-coffee": "~0.10.1",
+    "grunt-contrib-watch": "~0.6.1",
+    "karma": "~0.12.6",
+    "grunt-karma": "~0.8.2",
+    "grunt-bump": "0.0.13"
+  },
+  "main": "./lib/binaryTrunk"
 }
