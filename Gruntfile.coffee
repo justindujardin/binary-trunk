@@ -50,6 +50,14 @@ module.exports = (grunt) ->
         configFile: 'karma.conf.js'
         options: singleRun:true
 
+    coveralls:
+      options:
+        coverage_dir: '.coverage/',
+        debug: !!process.env.TRAVIS,
+        dryRun: !!process.env.TRAVIS,
+        force: true,
+        recursive: true
+
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-karma'
