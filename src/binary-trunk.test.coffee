@@ -189,7 +189,7 @@ test 'BinaryTreeNode.getSide', ->
   node = tree.find 4
   equal node.parent.getSide(node), 'right', 
     'found child on expected side of parent'
-  raises -> node.parent.getSide(tree)
+  throws -> node.parent.getSide(tree)
 
 # **should be able to set a child to a given side by side name**
 
@@ -207,7 +207,7 @@ test 'BinaryTreeNode.setSide', ->
   tree.setSide two, 'right'
   equal tree.right is two, true, 
     'child assigned to right properly'
-  raises -> tree.setSide node, 'rihgt'
+  throws -> tree.setSide node, 'rihgt'
 
 # **should be able to return children as a list**
 

@@ -34,7 +34,8 @@
     "karma-qunit": "~0.1.1",
     "grunt-cli": "~0.1.13",
     "grunt-conventional-changelog": "~1.1.0",
-    "grunt-npm": "0.0.2"
+    "grunt-npm": "0.0.2",
+    "karma-coverage": "~0.2.7"
   },
   "main": "./lib/binary-trunk.js",
   "contributors": []

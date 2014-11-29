@@ -56,6 +56,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-bump'
   grunt.loadNpmTasks 'grunt-conventional-changelog'
   grunt.loadNpmTasks 'grunt-npm'
+  grunt.loadNpmTasks 'grunt-karma-coveralls'
 
   grunt.registerTask 'default', ['karma:unit', 'coffee']
   grunt.registerTask 'develop',    ['default','watch']

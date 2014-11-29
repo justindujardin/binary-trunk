@@ -1,4 +1,7 @@
 module.exports = function(config) {
+
+   var coverageDebug = false;
+
    config.set({
       basePath: './',
       frameworks: ['qunit'],
@@ -7,7 +10,7 @@ module.exports = function(config) {
          "lib/binary-trunk.js",
          "lib/binary-trunk.test.js"
       ],
-      reporters: ['dots'],
+      reporters: ['dots','coverage'],
       port: 9876,
       colors: true,
       logLevel: config.LOG_INFO,
@@ -17,7 +20,14 @@ module.exports = function(config) {
       plugins: [
          'karma-chrome-launcher',
          'karma-firefox-launcher',
-         'karma-qunit'
-      ]
+         'karma-qunit',
+         'karma-coverage'
+      ],
+      preprocessors: (process.env.TRAVIS || coverageDebug) ? { "lib/binary-trunk.js": "coverage" } : {},
+      coverageReporter: {
+         type: "lcov",
+         dir: ".coverage/"
+      }
+
    });
 };
