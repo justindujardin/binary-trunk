@@ -10,7 +10,7 @@
                |  |  |  |   '  ''  '|  ||  ||  \  \  
                `--'  `--'    `----' `--''--'`--'`--' 
 </pre>            
-[![Build Status](https://secure.travis-ci.org/justindujardin/binary-trunk.png)](http://travis-ci.org/justindujardin/binary-trunk)
+[![Build Status](https://travis-ci.org/justindujardin/binary-trunk.svg?branch=master)](https://travis-ci.org/justindujardin/binary-trunk) [![Coverage Status](https://img.shields.io/coveralls/justindujardin/binary-trunk.svg)](https://coveralls.io/r/justindujardin/binary-trunk)
                                         
 CoffeeScript binary tree classes, and a tree layout algorithm for rendering them.  Tests and all that stuff, too.  For more information, check out the [annotated source code](http://justindujardin.github.com/binary-trunk/).
 
