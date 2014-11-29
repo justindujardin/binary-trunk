@@ -52,7 +52,7 @@ module.exports = (grunt) ->
 
     coveralls:
       options:
-        coverage_dir: '.coverage/',
+        coverageDir: '.coverage/',
         debug: !!process.env.TRAVIS,
         dryRun: !!process.env.TRAVIS,
         force: true,
