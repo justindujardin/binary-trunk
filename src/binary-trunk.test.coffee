@@ -33,7 +33,8 @@ test 'BinaryTreeNode.constructor', ->
 # from the cloned tree.
 test 'BinaryTreeNode.clone', ->
   tree = new DJC.BinarySearchTree 0
-  tree.insert i for i in [0..25]
+  tree.insert i for i in [-5..25]
+  tree.insert -25
   fifteen = tree.find 15
   equal fifteen != null, true,
     'find isolation node'
@@ -44,6 +45,12 @@ test 'BinaryTreeNode.clone', ->
   clone.visitInorder -> count++
   equal count, 11, 
     'clone node has expected 11 remaining nodes'
+
+  node = new DJC.BinaryTreeNode( new DJC.BinaryTreeNode, new DJC.BinaryTreeNode )
+  clone = node.clone()
+  equal clone.left.isLeaf(), true
+  equal clone.right.isLeaf(), true
+
 
 # **should support identifying as a leaf node**
 
@@ -92,6 +99,7 @@ test 'BinaryTreeNode.visit[Pre/In/Post]order (Stop)', ->
   tree = new DJC.BinarySearchTree 0
   tree.insert i for i in values
 
+  # stop on left node
   total = 0
   tree.visitPreorder (node) ->
     total += 1
@@ -109,6 +117,25 @@ test 'BinaryTreeNode.visit[Pre/In/Post]order (Stop)', ->
     total += 1
     return DJC.BT.STOP if node.key == -1
   equal total, 1, 'postorder stops at first node'
+
+  # stop on the right node
+  total = 0
+  tree.visitPreorder (node) ->
+    total += 1
+    return DJC.BT.STOP if node.key == 1
+  equal total, 3, 'preorder stops at second node'
+
+  total = 0
+  tree.visitInorder (node) ->
+    total += 1
+    return DJC.BT.STOP if node.key == 1
+  equal total, 3, 'inorder stops at third node'
+
+  total = 0
+  tree.visitPostorder (node) ->
+    total += 1
+    return DJC.BT.STOP if node.key == 1
+  equal total, 2, 'postorder stops at second node'
 
 
 # **should support inorder visiting**
@@ -207,7 +234,7 @@ test 'BinaryTreeNode.setSide', ->
   tree.setSide two, 'right'
   equal tree.right is two, true, 
     'child assigned to right properly'
-  throws -> tree.setSide node, 'rihgt'
+  throws -> tree.setSide two, 'rihgt'
 
 # **should be able to return children as a list**
 
@@ -279,7 +306,7 @@ test 'BinarySearchTree.find', ->
 test 'BinaryTreeTidier.layout', ->
   tree = new DJC.BinarySearchTree 0
   tree.insert val for val in [-100..100]
-  result = new DJC.BinaryTreeTidier().layout tree
+  result = new DJC.BinaryTreeTidier().layout tree, 1
   equal result != null, true,
     'expect a result from tidier layout pass'
   @

@@ -49,7 +49,7 @@ class DJC.BinaryTreeNode
   constructor:(left,right) ->
     @setLeft left if left
     @setRight right if right
-    @parent ?= undefined
+    @parent = null
 
   # Create a clone of this tree
   clone:() ->
@@ -60,9 +60,6 @@ class DJC.BinaryTreeNode
 
   # Is this node a leaf?  A node is a leaf if it has no children.
   isLeaf:() -> not @left and not @right
-
-  # Serialize the node as a string
-  toString:() -> "#{@left} #{@right}"
 
   # Rotate a node, changing the structure of the tree, without modifying
   # the order of the nodes in the tree.
@@ -156,8 +153,7 @@ class DJC.BinaryTreeNode
   # sibling, the return value will be undefined.
   getSibling:() ->
     return if not @parent
-    return @parent.right if @parent.left is @
-    return @parent.left if @parent.right is @
+    return if @parent.left is @ then @parent.right else @parent.left
 
 # ## <a id="BinarySearchTree"></a>BinarySearchTree
 
@@ -201,7 +197,7 @@ class DJC.BinarySearchTree extends DJC.BinaryTreeNode
         node = node.left
         continue
       return node if key == node.key
-      return null
+      break
     null
 
 
@@ -270,8 +266,7 @@ class DJC.BinaryTreeTidier
     loops = 0
     while left and right 
       loops++
-      throw new Error "An impossibly large tree perhaps?" if loops > 100000
-      if currentSeparation < minimumSeparation 
+      if currentSeparation < minimumSeparation
         rootSeparation += (minimumSeparation - currentSeparation)
         currentSeparation = minimumSeparation
 
